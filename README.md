@@ -72,8 +72,7 @@ de AR é tocado (via `USDZExporter` do three.js). Isso traz dois benefícios:
 
 - a **cor escolhida vai para o AR** — o USDZ é gerado a partir do estado atual da cena;
 - não dependemos do MIME type do servidor para `.usdz`, porque o arquivo entregue
-  é um `Blob` já tipado como `model/vnd.usdz+zip`. Isso contorna a limitação do
-  GitHub Pages, que não mapeia a extensão `.usdz`.
+  é um `Blob` já tipado como `model/vnd.usdz+zip`.
 
 Custo: ~250 ms de conversão e um USDZ de ~7 MB **em memória** (a textura JPEG é
 reempacotada como PNG). Nada trafega pela rede nessa etapa.
@@ -132,6 +131,16 @@ O Pages publica a raiz da branch, então `index.html` e `ombrelone.glb` precisam
 estar na raiz do repositório. O `.nojekyll` (vazio) impede o Jekyll de processar
 o site desnecessariamente.
 
+### Verificado em produção
+
+Depois do deploy, medido na URL pública:
+
+- `.glb` → `content-type: model/gltf-binary` e **gzip** (2,48 MB na rede em vez de 2,91 MB);
+- `.usdz` → `content-type: model/vnd.usdz+zip`;
+- página carrega, 6 materiais disponíveis, console sem erros;
+- em iPhone simulado (`CriOS`): `canActivateAR: true`, botão de AR visível e USDZ
+  gerado em ~250 ms.
+
 ### Limites e regras do Pages
 
 - No plano Free o repositório precisa ser **público** (repo privado exige GitHub Pro).
@@ -148,10 +157,10 @@ o site desnecessariamente.
    [Sketchfab](https://sketchfab.com/3d-models/ombrelone-lateral-octo-tecido-tidelli-agave-casa-b6eead8fbb594e9eb9d90b52a5ed4bb7)
    (Download 3D Model → USDZ).
 2. Basta declarar `ios-src="ombrelone.usdz"` no `<model-viewer>` e publicar de novo.
-3. Atenção: o GitHub Pages **não mapeia** a extensão `.usdz` para `model/vnd.usdz+zip`
-   (confirmado no `mime-types-data`), e o Safari pode acabar **baixando** o
-   arquivo em vez de abrir o AR. Nesse caso, publique com Cloudflare Pages e um
-   arquivo `_headers` na raiz:
+3. Testado em produção: o GitHub Pages **serve `.usdz` como
+   `model/vnd.usdz+zip`** (mesmo a extensão não constando no `mime-types-data`).
+   Ou seja, o caminho do `ios-src` funciona sem gambiarra. Se algum dia o MIME
+   sair errado, force com um `_headers` no Cloudflare Pages:
 
 ```
 /*.usdz
