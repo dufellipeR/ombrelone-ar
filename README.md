@@ -104,8 +104,11 @@ O site vive no repositório **`dufellipeR/ombrelone-ar`** e é servido em
 
 ### Primeira publicação
 
+O remoto já está configurado (`origin` → `git@github.com:dufellipeR/ombrelone-ar.git`)
+e a branch `main` já foi enviada. Se um dia recriar o repositório do zero:
+
 ```bash
-git remote add origin git@github.com:dufellipeR/ombrelone-ar.git   # só na primeira vez
+git remote add origin git@github.com:dufellipeR/ombrelone-ar.git
 git push -u origin main
 ```
 
